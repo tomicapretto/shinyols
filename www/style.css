@@ -1,0 +1,48 @@
+@media only screen and (min-width: 1200px) {
+  .ui.ui.ui.container:not(.fluid) {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+#sidebar {
+  background: #4C5760;
+  width: 18rem;
+}
+
+.ui.form.field > label {
+  color: rgba(255, 255, 255, .9);
+  font-size: 1em;
+}
+
+.sidebar_header {
+  color: rgba(255, 255, 255, .9);
+  text-align:center;
+  font-weight:bold;
+}
+
+.ui.slider .inner .track-fill {
+  background-color: #34495e;
+}
+
+.ui.slider .inner .thumb {
+    height: 1.25em;
+    width: 1.25em;
+}
+
+.ui.slider:not(.vertical):not(.checkbox) {
+    width: 100%;
+    padding: .75em 0em;
+}
+
+.ui.grid>.row {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+.card-header {
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom: 0px;
+}

@@ -15,11 +15,11 @@ var margin = 50,
     xmin = 0,
     ymax = 13
     ymin = 0,
-    barPadding = 0.1,
-    colour = "rgba(255,0,0,1)",
-    sq_fill= "rgba(70,130,180, 0.4)",
-    sq_stroke = "rgba(70,130,180, 0.7)"
-    hovercolour = "rgba(50,50,50,1)",
+    line_stroke = "rgb(64, 115, 158)",
+    dot_fill = "rgb(192, 57, 43, 0.5)",
+    dot_stroke = "rgb(192, 57, 43, 0.75)",
+    sq_fill= "rgba(64, 115, 158, 0.25)", // "rgba(76, 87, 96, 0.25)",
+    sq_stroke = "rgba(64, 115, 158, 0.5)", //"rgba(76, 87, 96, 0.5)",
     xLabel = "Predictor",
     yLabel = "Response",
     chartTitle = "Least squares fit";
@@ -40,55 +40,47 @@ svg.append("g")
   .attr("transform", "translate(" + xScale(0) + ", " + margin + ")")
   .call(d3.axisLeft(yScale));
 
-
 // Axes labels
 svg.append("text")
-  .attr("transform", "translate(" + (width/2) + " ," + (height+2*margin) + ")")
-  .attr("dx", "1em") .style("text-anchor", "middle")
-  .style("font-family", "Tahoma, Geneva, sans-serif")
-  .style("font-size", "12pt") .text(xLabel); 
+  .attr("transform",  `translate(${(width / 2) + margin}, ${height + 2 * margin})`)
+  .attr("dx", "1em")
+  .style("text-anchor", "middle")
+  .style("font-family", "Lato, sans-serif")
+  .style("font-size", "14pt")
+  .text(xLabel); 
 
-svg.append("text") .attr("transform", "translate(" + 0 + " ," + ((height+2*margin)/2) + ") rotate(-90)")
+svg.append("text")
+  .attr("transform", `translate(0, ${((height + 2 * margin) / 2)}) rotate(-90)`)
   .attr("dy", "1em")
   .style("text-anchor", "middle")
-  .style("font-family", "Tahoma, Geneva, sans-serif")
-  .style("font-size", "12pt")
+  .style("font-family", "Lato, sans-serif")
+  .style("font-size", "14pt")
   .text(yLabel);
 
 // Create the chart title
 svg.append("text")
-  .attr("x", (width / 2))
+  .attr("x", (width / 2) + margin)
   .attr("y", (margin / 2))
   .attr("text-anchor", "middle")
   .attr("dx", "1em")
-  .style("font-size", "16pt")
-  .style("font-family", "Tahoma, Geneva, sans-serif")
+  .style("font-size", "18pt")
+  .style("font-family", "Lato, sans-serif")
   .text(chartTitle);
 
 // Create the chart
+
+// Dots
+
 // Lineplot
 var line = svg.append("path")
     .datum(data.line)
     .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 2.5)
+    .attr("stroke", line_stroke)
+    .attr("stroke-width", 3)
     .attr("d", d3.line()
-      .x(function(d) { return xScale(d.x)})
-      .y(function(d) { return yScale(d.y) + margin})
+      .x(function(d) {return xScale(d.x)})
+      .y(function(d) {return yScale(d.y) + margin})
       );
-
-// Squares
-/*svg.selectAll('rect')
-  .data(data.rect)
-  .enter()
-  .append('rect')
-  .attr('x', function(d) {return xScale(d.x);})
-  .attr('y', function(d) {return yScale(d.y);})
-  .attr('width', function(d) {return scale_rect_width(d);})
-  .attr('height', function(d) {return scale_rect_height(d);})
-  .attr('stroke', sq_stroke)
-  .attr('stroke-width', '2')
-  .attr('fill', sq_fill);*/
 
 // Listen to clicks on plot
 svg.on('click', function(event) {
@@ -96,41 +88,29 @@ svg.on('click', function(event) {
   Shiny.setInputValue("new_point",
     [xScale.invert(x), yScale.invert(y - margin)], {priority : "event"}
   );
-  drawCircle(x, y);
 });
-
-function drawCircle(x, y) {
-  svg.append("circle")
-    .attr("cx", x)
-    .attr("cy", y)
-    .attr("r", 4)
-    .style("fill", colour);
-}
 
 // For further data coming we use r2d3.onRender because we only update the 
 // dots, squares, lines, but not the layout.
 
 r2d3.onRender(function(data, svg, width, height, options) {
   // Create and update circles
+  // This remove is a workaround to avoid having duplicated dots... but 
+  // i dont't like how it works
   
-  /*svg.selectAll('dot')
+  // TODO: Only update plot with NEW data, and not with ALL data.
+  svg.selectAll('circle').remove();
+  
+  svg.selectAll('dot')
     .data(data.scatter)
     .enter()
     .append("circle")
     .attr("cx", function (d) {return xScale(d.x); } )
     .attr("cy", function (d) {return yScale(d.y) + margin;} )
-    .attr("r", function (d) { return 4;})
-    .style("fill", colour);*/
-  
-  // Pasar un "shake", y si "shake" es TRUE, utilizamos el transition
-  
-   /*svg.selectAll("circle")
-    .data(data.scatter)
-    .transition()
-    .duration(500)
-    .attr("cx", function (d) {return xScale(d.x);})
-    .attr("cy", function (d) {return yScale(d.y) + margin;});*/
-  
+    .attr("r", 6)
+    .style("fill", dot_fill)
+    .style("stroke", dot_stroke);
+
   // Update line
   line
     .datum(data.line)
@@ -141,27 +121,27 @@ r2d3.onRender(function(data, svg, width, height, options) {
       .y(function(d) {return yScale(d.y) + margin})
     );
 
+  // Create and update rects
+  svg.selectAll('rect')
+    .data(data.rect)
+    .enter()
+    .append('rect')
+    .attr('x', function(d) {return xScale(d.x);})
+    .attr('y', function(d) {return yScale(d.y) + margin;})
+    .attr('width', function(d) {return scale_rect_width(d);})
+    .attr('height', function(d) {return scale_rect_height(d);})
+    .attr('stroke', sq_stroke)
+    .attr('stroke-width', '2')
+    .attr('fill', sq_fill);
 
-    svg.selectAll('rect')
-      .data(data.rect)
-      .enter()
-      .append('rect')
-      .attr('x', function(d) {return xScale(d.x);})
-      .attr('y', function(d) {return yScale(d.y) + margin;})
-      .attr('width', function(d) {return scale_rect_width(d);})
-      .attr('height', function(d) {return scale_rect_height(d);})
-      .attr('stroke', sq_stroke)
-      .attr('stroke-width', '2')
-      .attr('fill', sq_fill);
-
-    svg.selectAll('rect')
-      .data(data.rect)
-      .transition()
-      .duration(500)
-      .attr('x', function(d) {return xScale(d.x);})
-      .attr('y', function(d) {return yScale(d.y) + margin;})
-      .attr('width', function(d) {return scale_rect_width(d);})
-      .attr('height', function(d) {return scale_rect_height(d);});
+  svg.selectAll('rect')
+    .data(data.rect)
+    .transition()
+    .duration(500)
+    .attr('x', function(d) {return xScale(d.x);})
+    .attr('y', function(d) {return yScale(d.y) + margin;})
+    .attr('width', function(d) {return scale_rect_width(d);})
+    .attr('height', function(d) {return scale_rect_height(d);});
 });
 
 // Helper functions
@@ -181,3 +161,15 @@ function scale_rect_height(d) {
     // gives the height in px
     return yScale(d.y - d.height) - yScale(d.y);
 };
+
+
+// Old functions
+/*
+function drawCircle(x, y) {
+  svg.append("circle")
+    .attr("cx", x)
+    .attr("cy", y)
+    .attr("r", 4)
+    .style("fill", colour);
+}
+*/
