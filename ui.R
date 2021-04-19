@@ -29,7 +29,7 @@ body = function() {
     style = "margin-left: 260px",
     tags$div(
       class = "ui container",
-      tags$h1(class = "ui header", "Sampling distributions playground"),
+      tags$h1(class = "ui header", "Least squares regression"),
       tags$div(
         d3Output("d3", width = "700px", height = "700px"),
         align = "center"

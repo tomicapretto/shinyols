@@ -21,8 +21,7 @@ var margin = 50,
     sq_fill= "rgba(64, 115, 158, 0.25)", // "rgba(76, 87, 96, 0.25)",
     sq_stroke = "rgba(64, 115, 158, 0.5)", //"rgba(76, 87, 96, 0.5)",
     xLabel = "Predictor",
-    yLabel = "Response",
-    chartTitle = "Least squares fit";
+    yLabel = "Response";
 
 // Create the axes
 xScale = d3.scaleLinear()
@@ -58,7 +57,7 @@ svg.append("text")
   .text(yLabel);
 
 // Create the chart title
-svg.append("text")
+/*svg.append("text")
   .attr("x", (width / 2) + margin)
   .attr("y", (margin / 2))
   .attr("text-anchor", "middle")
@@ -66,7 +65,7 @@ svg.append("text")
   .style("font-size", "18pt")
   .style("font-family", "Lato, sans-serif")
   .text(chartTitle);
-
+*/
 // The chart
 
 // Lineplot. Keep a reference to the line object.
@@ -89,7 +88,6 @@ svg.on('click', function(event) {
       [xScale.invert(x), yScale.invert(y - margin)], 
       {priority : "event"}
     );
-    drawCircle(x, y);
   }
 });
 
@@ -97,16 +95,27 @@ svg.on('click', function(event) {
 // dots, squares, lines, but not the layout.
 
 r2d3.onRender(function(data, svg, width, height, options) {
-  if (options.shake) {
-    // If shake is true, data points are moved here
-    svg.selectAll('dot')
-      .data(data.scatter)
-      .transition()
-      .duration(500)
-      .attr("cx", function (d) {return xScale(d.x); } )
-      .attr("cy", function (d) {return yScale(d.y) + margin;});
-  }
-  
+    
+  svg.selectAll('circle')
+    .data(data.scatter)
+    .enter()
+    .append('circle')
+    .attr("cx", function(d) {return xScale(d.x)})
+    .attr("cy", function(d) {return yScale(d.y) + margin})
+    .attr("r", 6)
+    .style("fill", dot_fill)
+    .style("stroke", dot_stroke);
+    
+  svg.selectAll('circle').exit().remove();
+    
+  svg.selectAll('circle')
+    .data(data.scatter)
+    .transition()
+    .ease(d3.easeElastic)
+    .duration(500)
+    .attr("cx", function(d) {return xScale(d.x)})
+    .attr("cy", function(d) {return yScale(d.y) + margin});
+
   // Update line
   line
     .datum(data.line)
@@ -158,6 +167,8 @@ function scale_rect_height(d) {
     return yScale(d.y - d.height) - yScale(d.y);
 };
 
+/*
+Old function
 function drawCircle(x, y) {
   svg.append("circle")
     .attr("cx", x)
@@ -166,3 +177,4 @@ function drawCircle(x, y) {
     .style("fill", dot_fill)
     .style("stroke", dot_stroke);
 }
+*/
