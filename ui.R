@@ -13,11 +13,52 @@ sidebar = function() {
       class = "item",
       ui_row(
         ui_col(
-          width = 14,
-          actionButton("shake", "shake")
+          width = 16,
+          actionButton("add_points", "Add random points", width = "100%")
+        )
+      ),
+      ui_row(
+        ui_col(
+          width = 16,
+          actionButton("shake", "Shake it!", width = "100%")
+        )
+      )
+    ),
+    tags$div(
+      tags$br()
+    ),
+    tags$div(
+      class = "item",
+      ui_row(
+        ui_col(
+          style = "top: 20%",
+          width = 2,
+          katexR::katex("\\beta_0"),
         ),
         ui_col(
-          width = 2
+          width = 14,
+          rangeInput("intercept", value = 0, min = -10, max = 10, step = 0.01)
+        )
+      ),
+      ui_row(
+        ui_col(
+          style = "top: 20%",
+          width = 2,
+          katexR::katex("\\beta_1"),
+        ),
+        ui_col(
+          width = 14,
+          rangeInput("slope", value = 0, min = -10, max = 10, step = 0.01)
+        )
+      )
+    ),
+    
+    tags$div(
+      class = "item",
+      ui_row(
+        ui_col(
+          width = 16,
+          actionButton("update", "Update")
         )
       )
     )

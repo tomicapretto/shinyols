@@ -45,7 +45,7 @@ svg.append("text")
   .attr("dx", "1em")
   .style("text-anchor", "middle")
   .style("font-family", "Lato, sans-serif")
-  .style("font-size", "14pt")
+  .style("font-size", "16pt")
   .text(xLabel); 
 
 svg.append("text")
@@ -53,7 +53,7 @@ svg.append("text")
   .attr("dy", "1em")
   .style("text-anchor", "middle")
   .style("font-family", "Lato, sans-serif")
-  .style("font-size", "14pt")
+  .style("font-size", "16pt")
   .text(yLabel);
 
 // Create the chart title

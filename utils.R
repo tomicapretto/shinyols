@@ -24,3 +24,31 @@ ui_col = function(width, ...) {
     ...
   )
 }
+
+rangeInput = function(inputId, value = 20, min = 0, max = 100, step = 1) {
+  form = tags$div(
+    class = "range-input",
+    id = inputId,
+    tags$div(
+      tags$div(
+        class = "range-input-controls",
+        tags$div(class = "range-value"),
+        tags$input(type = "range", min = min, max = max, value = value, step = step)
+      )
+    )
+  )
+  deps = htmltools::htmlDependency(
+    name = "rangeInput",
+    version = "1.0.0",
+    src = "www/range-input",
+    script = "binding.js",
+    stylesheet = "styles.css"
+  )
+  htmltools::attachDependencies(form, deps)
+}
+
+updateRangeInput = function(id, value, session = shiny::getDefaultReactiveDomain()) {
+  message = list(value = round(value, 2))
+  
+  session$sendInputMessage(id, message)
+}

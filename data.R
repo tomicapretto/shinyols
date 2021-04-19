@@ -44,14 +44,28 @@ RegressionData = R6::R6Class(
         height = abs(pred$y -self$data[["scatter"]]$y)
       )
     },
-    
+    add_random_points = function(n=5) {
+      df_n = nrow(self$data[["scatter"]])
+      x = runif(n, 2, 8)
+      y = 5 + x * rnorm(1, 0, 0.3) + rnorm(n)
+      isolate({
+        self$data[["scatter"]] = rbind(
+          self$data[["scatter"]], 
+          data.frame(x = x, y = y)
+        )
+        self$compute_line()
+        self$compute_rects()
+      })
+    },
     shake = function() {
       n = nrow(self$data[["scatter"]])
       isolate({
-        self$data[["scatter"]]$x = self$data[["scatter"]]$x + rnorm(n, sd = 0.2)
-        self$data[["scatter"]]$y = self$data[["scatter"]]$y + rnorm(n, sd = 0.2)
-        self$compute_line()
-        self$compute_rects()
+        if (n >= 1) {
+          self$data[["scatter"]]$x = self$data[["scatter"]]$x + rnorm(n, sd = 0.2)
+          self$data[["scatter"]]$y = self$data[["scatter"]]$y + rnorm(n, sd = 0.4)
+          self$compute_line()
+          self$compute_rects()
+        }
       })
     },
     get_data_list = function() {
