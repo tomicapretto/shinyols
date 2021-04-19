@@ -67,11 +67,9 @@ svg.append("text")
   .style("font-family", "Lato, sans-serif")
   .text(chartTitle);
 
-// Create the chart
+// The chart
 
-// Dots
-
-// Lineplot
+// Lineplot. Keep a reference to the line object.
 var line = svg.append("path")
     .datum(data.line)
     .attr("fill", "none")
@@ -82,35 +80,33 @@ var line = svg.append("path")
       .y(function(d) {return yScale(d.y) + margin})
       );
 
-// Listen to clicks on plot
+// Listen to clicks on plot and set input$new_point
 svg.on('click', function(event) {
   var [x, y] = d3.pointer(event);
-  Shiny.setInputValue("new_point",
-    [xScale.invert(x), yScale.invert(y - margin)], {priority : "event"}
-  );
+  if (x > margin && x < (width + 0.9 * margin) && y > margin && y < (height + 0.9 * margin)) {
+    Shiny.setInputValue(
+      "new_point", 
+      [xScale.invert(x), yScale.invert(y - margin)], 
+      {priority : "event"}
+    );
+    drawCircle(x, y);
+  }
 });
 
 // For further data coming we use r2d3.onRender because we only update the 
 // dots, squares, lines, but not the layout.
 
 r2d3.onRender(function(data, svg, width, height, options) {
-  // Create and update circles
-  // This remove is a workaround to avoid having duplicated dots... but 
-  // i dont't like how it works
+  if (options.shake) {
+    // If shake is true, data points are moved here
+    svg.selectAll('dot')
+      .data(data.scatter)
+      .transition()
+      .duration(500)
+      .attr("cx", function (d) {return xScale(d.x); } )
+      .attr("cy", function (d) {return yScale(d.y) + margin;});
+  }
   
-  // TODO: Only update plot with NEW data, and not with ALL data.
-  svg.selectAll('circle').remove();
-  
-  svg.selectAll('dot')
-    .data(data.scatter)
-    .enter()
-    .append("circle")
-    .attr("cx", function (d) {return xScale(d.x); } )
-    .attr("cy", function (d) {return yScale(d.y) + margin;} )
-    .attr("r", 6)
-    .style("fill", dot_fill)
-    .style("stroke", dot_stroke);
-
   // Update line
   line
     .datum(data.line)
@@ -162,14 +158,11 @@ function scale_rect_height(d) {
     return yScale(d.y - d.height) - yScale(d.y);
 };
 
-
-// Old functions
-/*
 function drawCircle(x, y) {
   svg.append("circle")
     .attr("cx", x)
     .attr("cy", y)
-    .attr("r", 4)
-    .style("fill", colour);
+    .attr("r", 6)
+    .style("fill", dot_fill)
+    .style("stroke", dot_stroke);
 }
-*/

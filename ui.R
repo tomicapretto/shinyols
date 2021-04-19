@@ -13,7 +13,8 @@ sidebar = function() {
       class = "item",
       ui_row(
         ui_col(
-          width = 14
+          width = 14,
+          actionButton("shake", "shake")
         ),
         ui_col(
           width = 2
@@ -39,7 +40,9 @@ body = function() {
 
 ui = function() {
   shiny.semantic::semanticPage(
-    tags$head(shiny::includeCSS("www/style.css")),
+    tags$head(
+      shiny::includeCSS("www/style.css")
+    ),
     shinyjs::useShinyjs(),
     sidebar(),
     body()
