@@ -37,7 +37,7 @@ sidebar = function() {
         ),
         ui_col(
           width = 14,
-          rangeInput("intercept", value = 0, min = -10, max = 10, step = 0.01)
+          rangeInput("intercept", value = 0, min = 0, max = 13, step = 0.01)
         )
       ),
       ui_row(

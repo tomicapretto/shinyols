@@ -56,7 +56,7 @@ RegressionData = R6::R6Class(
     add_random_points = function(n=5) {
       df_n = nrow(self$data[["scatter"]])
       x = runif(n, 2, 8)
-      y = 5 + x * rnorm(1, 0, 0.3) + rnorm(n)
+      y = 5 + x * rnorm(1, 0, 0.3) + rnorm(n) # need to constrain
       isolate({
         self$data[["scatter"]] = rbind(
           self$data[["scatter"]], 
@@ -71,8 +71,8 @@ RegressionData = R6::R6Class(
       n = nrow(self$data[["scatter"]])
       isolate({
         if (n >= 1) {
-          self$data[["scatter"]]$x = self$data[["scatter"]]$x + rnorm(n, sd = 0.2)
-          self$data[["scatter"]]$y = self$data[["scatter"]]$y + rnorm(n, sd = 0.4)
+          self$data[["scatter"]]$x = shake(self$data[["scatter"]]$x, 0.2)
+          self$data[["scatter"]]$y = shake(self$data[["scatter"]]$y, 0.4) 
           self$compute_line()
           self$compute_rects()
         }
@@ -101,3 +101,10 @@ RegressionData = R6::R6Class(
     }
   )
 )
+
+shake = function(x, sd) {
+  x = x + rnorm(length(x), sd = sd)
+  x = ifelse(x > 13, 13, x)
+  x = ifelse(x < 0, 0, x)
+  x
+}
