@@ -1,19 +1,28 @@
 server = function(input, output, session) {
   data = RegressionData$new()
+  
   observe({
     data$add_point(input$new_point)
   })
+  
+  observeEvent(input$clear, {
+    data$clear()
+  })
+  
   observeEvent(input$shake, {
     data$shake()
   })
+  
   observeEvent(input$add_points, {
     data$add_random_points()
   })
   
-  observeEvent(input$update, {
-    updateRangeInput(
-      "intercept", runif(1, -5, 5)
-    )
+  observe({
+    updateRangeInput("intercept", data$get_intercept())
+  })
+  
+  observe({
+    updateRangeInput("slope", data$get_slope())
   })
   
   output$d3 = renderD3({

@@ -49,6 +49,5 @@ rangeInput = function(inputId, value = 20, min = 0, max = 100, step = 1) {
 
 updateRangeInput = function(id, value, session = shiny::getDefaultReactiveDomain()) {
   message = list(value = round(value, 2))
-  
   session$sendInputMessage(id, message)
 }

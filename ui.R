@@ -58,7 +58,17 @@ sidebar = function() {
       ui_row(
         ui_col(
           width = 16,
-          actionButton("update", "Update")
+          actionButton("set_ols", "Set Least Squares Fit", width = "100%")
+        )
+      )
+    ),
+    
+    tags$div(
+      class = "item",
+      ui_row(
+        ui_col(
+          width = 16,
+          actionButton("clear", "Clear plot", width = "100%")
         )
       )
     )

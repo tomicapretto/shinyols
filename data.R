@@ -3,13 +3,16 @@ RegressionData = R6::R6Class(
   public = list(
     grid = seq(0, 13, by = 0.5),
     data = reactiveValues(),
+    
     initialize = function() {
       self$data[["scatter"]] = data.frame(x = numeric(0), y = numeric(0))
       self$data[["line"]] = data.frame(x = numeric(0), y = numeric(0))
       self$data[["rect"]] = data.frame(
         x = numeric(0), y = numeric(0), width = numeric(0), height = numeric(0)
       )
+      self$data[["fit"]] = list("intercept" = 0, "slope" = 0)
     },
+    
     add_point = function(coords) {
       if (is.null(coords)) return(NULL)
       isolate({
@@ -20,6 +23,7 @@ RegressionData = R6::R6Class(
         }
       })
     },
+    
     compute_line = function() {
       self$data[["line"]] = data.frame(
         x = self$grid,
@@ -29,14 +33,18 @@ RegressionData = R6::R6Class(
         )
       )
     },
+    
     compute_rects = function() {
+      
+      model = lm(y ~ x, data = self$data[["scatter"]])
       pred = data.frame(
         x = self$data[["scatter"]]$x,
-        y = predict(
-          lm(y ~ x, data = self$data[["scatter"]]), 
-          self$data[["scatter"]]
-        )
+        y = predict(model, self$data[["scatter"]])
       )
+      
+      self$data[["fit"]][["intercept"]] = model$coefficients[[1]]
+      self$data[["fit"]][["slope"]] = model$coefficients[[2]]
+      
       self$data[["rect"]]  = data.frame(
         x = self$data[["scatter"]]$x,
         y = ifelse(pred$y >= self$data[["scatter"]]$y, pred$y, self$data[["scatter"]]$y),
@@ -44,6 +52,7 @@ RegressionData = R6::R6Class(
         height = abs(pred$y -self$data[["scatter"]]$y)
       )
     },
+    
     add_random_points = function(n=5) {
       df_n = nrow(self$data[["scatter"]])
       x = runif(n, 2, 8)
@@ -57,6 +66,7 @@ RegressionData = R6::R6Class(
         self$compute_rects()
       })
     },
+    
     shake = function() {
       n = nrow(self$data[["scatter"]])
       isolate({
@@ -68,8 +78,26 @@ RegressionData = R6::R6Class(
         }
       })
     },
+    
+    clear = function() {
+      self$data[["scatter"]] = data.frame(x = numeric(0), y = numeric(0))
+      self$data[["line"]] = data.frame(x = numeric(0), y = numeric(0))
+      self$data[["rect"]] = data.frame(
+        x = numeric(0), y = numeric(0), width = numeric(0), height = numeric(0)
+      )
+      self$data[["fit"]] = list("intercept" = 0, "slope" = 0)
+    },
+    
     get_data_list = function() {
       reactiveValuesToList(self$data)
+    },
+    
+    get_intercept = function() {
+      self$data[["fit"]][["intercept"]]
+    },
+    
+    get_slope = function() {
+      self$data[["fit"]][["slope"]]
     }
   )
 )

@@ -115,6 +115,14 @@ r2d3.onRender(function(data, svg, width, height, options) {
     .duration(500)
     .attr("cx", function(d) {return xScale(d.x)})
     .attr("cy", function(d) {return yScale(d.y) + margin});
+  
+  
+  if (data.scatter.length == 0) {
+    svg.selectAll('circle')
+      .transition()
+      .attr("r", 0)
+      .remove();
+  }
 
   // Update line
   line
@@ -147,6 +155,22 @@ r2d3.onRender(function(data, svg, width, height, options) {
     .attr('y', function(d) {return yScale(d.y) + margin;})
     .attr('width', function(d) {return scale_rect_width(d);})
     .attr('height', function(d) {return scale_rect_height(d);});
+
+  if (data.rect.length == 0) {
+    svg.selectAll('rect')
+      .transition()
+      .attr('x', function(d) {
+        return this.getBBox().x + (this.getBBox().width / 2);
+      })
+      .attr('y', function(d) {
+        return this.getBBox().y + (this.getBBox().height / 2);
+      })
+      .attr('width', 0)
+      .attr('height', 0)
+      .remove();
+      
+      // https://stackoverflow.com/questions/21990857/d3-js-how-to-get-the-computed-width-and-height-for-an-arbitrary-element
+  }
 });
 
 // Helper functions
