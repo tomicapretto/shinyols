@@ -11,11 +11,11 @@
 var margin = 50,
     width = width - (2 * margin), 
     height = height - (2 * margin),
-    xmax = 13,
+    xmax = 10,
     xmin = 0,
-    ymax = 13
+    ymax = 10
     ymin = 0,
-    line_stroke = "rgb(64, 115, 158)",
+    line_stroke = "rgb(76, 87, 96)"//"rgb(64, 115, 158)",
     dot_fill = "rgb(192, 57, 43, 0.5)",
     dot_stroke = "rgb(192, 57, 43, 0.75)",
     sq_fill= "rgba(64, 115, 158, 0.25)", // "rgba(76, 87, 96, 0.25)",

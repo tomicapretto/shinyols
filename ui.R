@@ -37,7 +37,7 @@ sidebar = function() {
         ),
         ui_col(
           width = 14,
-          rangeInput("intercept", value = 0, min = 0, max = 13, step = 0.01)
+          rangeInput("intercept", value = 0, min = -5, max = 15, step = 0.01)
         )
       ),
       ui_row(
@@ -48,7 +48,7 @@ sidebar = function() {
         ),
         ui_col(
           width = 14,
-          rangeInput("slope", value = 0, min = -10, max = 10, step = 0.01)
+          rangeInput("slope", value = 0, min = -2, max = 2, step = 0.01)
         )
       )
     ),
@@ -81,6 +81,10 @@ body = function() {
     tags$div(
       class = "ui container",
       tags$h1(class = "ui header", "Least squares regression"),
+      tags$p(
+        "Sum of squares: ",
+        tags$span(id = "ss")
+      ),
       tags$div(
         d3Output("d3", width = "700px", height = "700px"),
         align = "center"
