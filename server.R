@@ -1,3 +1,6 @@
+source("utils.R")
+source("data.R")
+
 server = function(input, output, session) {
   data = RegressionData$new()
   

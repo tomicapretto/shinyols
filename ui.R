@@ -1,3 +1,5 @@
+source("utils.R")
+
 sidebar = function() {
   tags$div(
     class = "ui sidebar inverted vertical visible menu",
