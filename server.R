@@ -50,7 +50,7 @@ server = function(input, output, session) {
     data$set_ols_fit()
   })
   
-  output$d3 = renderD3({
+  output$d3 = r2d3::renderD3({
     r2d3(
       data = data_to_json(data$get_data_list()),
       script = "d3.js"

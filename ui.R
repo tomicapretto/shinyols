@@ -1,3 +1,4 @@
+library(r2d3)
 source("utils.R")
 
 sidebar = function() {
@@ -88,7 +89,7 @@ body = function() {
         tags$span(id = "ss")
       ),
       tags$div(
-        d3Output("d3", width = "700px", height = "700px"),
+        r2d3::d3Output("d3", width = "700px", height = "700px"),
         align = "center"
       )
     )

@@ -1,6 +1,5 @@
 library(shiny)
 library(shiny.semantic)
-library(r2d3)
 
 source("ui.R")
 source("server.R")
